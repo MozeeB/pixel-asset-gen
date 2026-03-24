@@ -1,0 +1,33 @@
+# Generated assets (regenerate with: python generate_assets.py)
+assets/
+assets_mobile/
+assets_desktop/
+test_output/
+test_hue/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Environment
+.env
+.venv/
+venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Claude Code
+.claude/

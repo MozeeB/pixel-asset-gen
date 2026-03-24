@@ -1,0 +1,1 @@
+# Sprite generators package
