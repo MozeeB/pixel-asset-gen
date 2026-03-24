@@ -122,6 +122,44 @@ TERRAIN = _build_palette("terrain", {
     "lava_bright": (255, 160, 40),
 })
 
+WEAPONS = _build_palette("weapons", {
+    # Metals
+    "iron": (140, 140, 155),
+    "steel": (180, 180, 200),
+    "gold_metal": (210, 170, 40),
+    "dark_metal": (60, 50, 70),
+    "crystal": (150, 190, 240),
+    "bone": (210, 200, 170),
+    # Handles
+    "wood": (120, 80, 40),
+    "dark_wood": (85, 55, 30),
+    "leather": (140, 95, 50),
+    "grip_wrap": (100, 70, 35),
+    # Enchantments
+    "fire": (255, 140, 30),
+    "fire_bright": (255, 220, 80),
+    "ice": (120, 200, 255),
+    "ice_bright": (200, 235, 255),
+    "lightning": (255, 255, 100),
+    "lightning_bright": (255, 255, 200),
+    "poison": (80, 220, 60),
+    "shadow": (80, 40, 120),
+    # Magic
+    "magic_blue": (60, 120, 255),
+    "magic_purple": (160, 60, 240),
+    "magic_white": (230, 230, 255),
+    # Rarity glows
+    "common": (160, 160, 160),
+    "uncommon": (50, 200, 50),
+    "rare": (50, 100, 255),
+    "epic": (160, 50, 255),
+    "legendary": (255, 160, 30),
+    # Bow/string
+    "string": (200, 190, 170),
+    "arrow_shaft": (160, 120, 60),
+    "fletching": (200, 50, 50),
+})
+
 ITEMS = _build_palette("items", {
     "gold": (255, 215, 0),
     "gem_red": (220, 40, 40),

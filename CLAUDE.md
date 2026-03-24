@@ -24,6 +24,7 @@ sprites/          Asset generators (each has generate_all() -> list)
   ui.py           Hearts, bars, buttons, inventory
   effects.py      24 visual effects
   objects.py      12 natural object animations (rock, sky, leaf, tree, water, grass)
+  weapons.py      29 weapons & shields (melee, ranged, magic, enchanted, rarity)
 
 generate_assets.py  Main CLI entry point (full CLI reference below)
 ```
@@ -114,9 +115,9 @@ python generate_assets.py --clean --profile mobile
 
 ## Categories
 
-player, enemies, npcs, terrain, items, ui, effects, objects
+player, enemies, npcs, terrain, items, ui, effects, objects, weapons
 
-Total: 136 assets (70 animated, 66 static)
+Total: 165 assets (83 animated, 82 static)
 
 ## CLI Flags Reference
 

@@ -36,7 +36,7 @@ from engine.drawing import create_spritesheet
 from engine.quality import get_profile, validate_sprite_size, validate_atlas_size, QualityProfile, PROFILES
 from engine.palette import recolor
 
-from sprites import player, enemies, npcs, items, terrain, effects, ui, objects
+from sprites import player, enemies, npcs, items, terrain, effects, ui, objects, weapons
 
 OUTPUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets")
 SCALE_FACTORS = [1, 2, 4]
@@ -51,6 +51,7 @@ CATEGORIES = {
     "ui": "UI",
     "effects": "Effects",
     "objects": "Objects (Natural)",
+    "weapons": "Weapons & Shields",
 }
 
 GENERATORS = {
@@ -62,6 +63,7 @@ GENERATORS = {
     "ui": ui.generate_all,
     "effects": effects.generate_all,
     "objects": objects.generate_all,
+    "weapons": weapons.generate_all,
 }
 
 
@@ -80,6 +82,7 @@ def create_dirs(categories: set[str], output_dir: str):
         "ui": ["ui"],
         "effects": ["effects"],
         "objects": ["objects"],
+        "weapons": ["weapons"],
     }
     dirs = ["atlas"]
     for cat in categories:
@@ -733,11 +736,12 @@ def main():
         "ui": "ui",
         "effects": "effects",
         "objects": "objects",
+        "weapons": "weapons",
     }
     cat_sprite_types = {
         "player": "character", "enemies": "character", "npcs": "character",
         "terrain": "terrain", "items": "item", "ui": "ui",
-        "effects": "effect", "objects": "object",
+        "effects": "effect", "objects": "object", "weapons": "weapon",
     }
 
     for cat_key in CATEGORIES:

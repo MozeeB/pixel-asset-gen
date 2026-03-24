@@ -2,7 +2,7 @@
 
 Procedural pixel art game asset generator. Produces complete, game-ready sprite sheets with animations, JSON metadata, texture atlases, and animated GIF previews — all from a single CLI command.
 
-**136 assets** (70 animated, 66 static) generated procedurally using sine waves, fractal noise, and physics simulation. Zero hand-drawn art required.
+**165 assets** (83 animated, 82 static) generated procedurally using sine waves, fractal noise, and physics simulation. Zero hand-drawn art required.
 
 ## Preview
 
@@ -38,6 +38,31 @@ Procedural pixel art game asset generator. Produces complete, game-ready sprite 
   <img src="preview/lightning_strike.gif" alt="Lightning Strike" width="64">
 </p>
 
+### Weapons & Shields
+
+<p>
+  <img src="preview/weapon_sword.png" alt="Sword" width="64">
+  <img src="preview/weapon_axe.png" alt="Axe" width="64">
+  <img src="preview/weapon_mace.png" alt="Mace" width="64">
+  <img src="preview/weapon_spear.png" alt="Spear" width="64">
+  <img src="preview/weapon_bow.png" alt="Bow" width="64">
+  <img src="preview/weapon_staff.png" alt="Staff" width="64">
+  <img src="preview/round_shield.png" alt="Round Shield" width="64">
+  <img src="preview/kite_shield.png" alt="Kite Shield" width="64">
+  <img src="preview/legendary_sword.png" alt="Legendary Sword" width="64">
+</p>
+
+### Weapon Animations
+
+<p>
+  <img src="preview/sword_slash.gif" alt="Sword Slash" width="64">
+  <img src="preview/bow_shoot.gif" alt="Bow Shoot" width="64">
+  <img src="preview/fire_sword.gif" alt="Fire Sword" width="64">
+  <img src="preview/shuriken_spin.gif" alt="Shuriken Spin" width="64">
+  <img src="preview/orb_pulse.gif" alt="Orb Pulse" width="64">
+  <img src="preview/staff_charge.gif" alt="Staff Charge" width="64">
+</p>
+
 ### Items & Terrain
 
 <p>
@@ -55,7 +80,7 @@ Procedural pixel art game asset generator. Produces complete, game-ready sprite 
 
 ## Features
 
-- **136 procedural assets** — characters, enemies, NPCs, terrain, items, UI, effects, natural objects
+- **165 procedural assets** — characters, enemies, NPCs, terrain, items, UI, effects, natural objects, weapons & shields
 - **Animated sprite sheets** — variable frame timing, looping/one-shot, 4-directional movement
 - **Multi-scale export** — 1x, 2x, 4x (or any custom scales like 3x, 8x)
 - **JSON metadata** — frame counts, timing, hitboxes, anchors, recommended FPS
@@ -186,6 +211,7 @@ python generate_assets.py --profile mobile --validate-only
 | UI | `ui` | 13 | hearts, health bars, buttons, inventory |
 | Effects | `effects` | 24 | explosions, magic, particles, combos |
 | Objects | `objects` | 12 | rock, sky, leaf, tree, water, grass |
+| Weapons | `weapons` | 29 | melee, ranged, magic, shields, enchanted, rarity |
 
 ## Output Format
 
@@ -248,6 +274,7 @@ pixel-asset-gen/
     ui.py           # Hearts, bars, buttons
     effects.py      # 24 visual effects
     objects.py      # 12 natural object animations
+    weapons.py      # 29 weapons, shields, enchanted, rarity
   generate_assets.py  # CLI entry point
   GUIDE.md            # Detailed usage guide
 ```
