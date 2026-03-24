@@ -11,7 +11,7 @@ Rarity: common, uncommon, rare, epic, legendary glow tiers
 
 import math
 from engine.drawing import (
-    new_sprite, put_pixel, get_pixel, draw_outline, draw_line,
+    new_sprite, put_pixel, get_pixel, draw_outline, draw_outline_thick, draw_line,
     draw_circle, draw_rect, draw_ellipse_filled,
 )
 from engine.palette import WEAPONS
@@ -172,7 +172,7 @@ def generate_sword() -> StaticSprite:
     """Static sword sprite."""
     img = new_sprite()
     _draw_sword(img)
-    draw_outline(img)
+    draw_outline_thick(img)
     return StaticSprite("weapon_sword", img, "weapons")
 
 
@@ -213,7 +213,7 @@ def generate_sword_slash() -> SpriteSheet:
                 if 0 <= tx < 16 and 0 <= tty < 16:
                     put_pixel(img, tx, tty, trail_color)
 
-        draw_outline(img)
+        draw_outline_thick(img)
         frames.append(img)
 
     return SpriteSheet("weapon_sword_slash", frames,
@@ -253,7 +253,7 @@ def _draw_axe(img, ox: int = 0, oy: int = 0):
 def generate_axe() -> StaticSprite:
     img = new_sprite()
     _draw_axe(img)
-    draw_outline(img)
+    draw_outline_thick(img)
     return StaticSprite("weapon_axe", img, "weapons")
 
 
@@ -278,7 +278,7 @@ def generate_axe_chop() -> SpriteSheet:
     for f, angle in enumerate(angles):
         img = new_sprite()
         _draw_rotated_pixels(img, axe_pixels, pivot_x, pivot_y, angle)
-        draw_outline(img)
+        draw_outline_thick(img)
         frames.append(img)
 
     return SpriteSheet("weapon_axe_chop", frames,
@@ -306,7 +306,7 @@ def generate_mace() -> StaticSprite:
         px, py = 7 + dx, 4 + dy
         if 0 <= px < 16 and 0 <= py < 16:
             put_pixel(img, px, py, wp.base("iron"))
-    draw_outline(img)
+    draw_outline_thick(img)
     return StaticSprite("weapon_mace", img, "weapons")
 
 
@@ -329,7 +329,7 @@ def generate_mace_swing() -> SpriteSheet:
                     c = wp.highlight("steel") if dx + dy < -1 else wp.base("iron")
                     head.append((7 + dx, 4 + dy, c))
         _draw_rotated_pixels(img, head, pivot_x, pivot_y, angle)
-        draw_outline(img)
+        draw_outline_thick(img)
         frames.append(img)
     return SpriteSheet("weapon_mace_swing", frames,
                        frame_durations_ms=[100, 80, 40, 50, 80, 100], loop=False)
@@ -356,7 +356,7 @@ def generate_spear() -> StaticSprite:
     # Binding
     put_pixel(img, 7, 3, wp.base("leather"))
     put_pixel(img, 8, 3, wp.base("leather"))
-    draw_outline(img)
+    draw_outline_thick(img)
     return StaticSprite("weapon_spear", img, "weapons")
 
 
@@ -385,7 +385,7 @@ def generate_spear_thrust() -> SpriteSheet:
                 py = y + y_off + 4
                 if 0 <= py < 16:
                     put_pixel(img, 7, py, wp.highlight("steel") + (60,))
-        draw_outline(img)
+        draw_outline_thick(img)
         frames.append(img)
     return SpriteSheet("weapon_spear_thrust", frames,
                        frame_durations_ms=[80, 60, 40, 50, 80, 100], loop=False)
@@ -414,7 +414,7 @@ def generate_dagger() -> StaticSprite:
             put_pixel(img, 9, y, wp.shadow("steel"))
     # Tip
     put_pixel(img, 7, 4, wp.highlight("steel"))
-    draw_outline(img)
+    draw_outline_thick(img)
     return StaticSprite("weapon_dagger", img, "weapons")
 
 
@@ -444,7 +444,7 @@ def generate_dagger_stab() -> SpriteSheet:
             py = y + y_off
             if 0 <= py < 16:
                 put_pixel(img, 7, py, wp.base("dark_wood"))
-        draw_outline(img)
+        draw_outline_thick(img)
         frames.append(img)
     return SpriteSheet("weapon_dagger_stab", frames,
                        frame_durations_ms=[60, 40, 30, 40, 60, 80], loop=False)
@@ -471,7 +471,7 @@ def generate_hammer() -> StaticSprite:
     # Center detail
     put_pixel(img, 7, 4, wp.shadow("iron"))
     put_pixel(img, 8, 4, wp.shadow("iron"))
-    draw_outline(img)
+    draw_outline_thick(img)
     return StaticSprite("weapon_hammer", img, "weapons")
 
 
@@ -502,7 +502,7 @@ def generate_scythe() -> StaticSprite:
     # Inner shadow
     put_pixel(img, 11, 4, wp.shadow("iron"))
     put_pixel(img, 12, 4, wp.shadow("iron"))
-    draw_outline(img)
+    draw_outline_thick(img)
     return StaticSprite("weapon_scythe", img, "weapons")
 
 
@@ -553,7 +553,7 @@ def _draw_bow_frame(img, string_pull: float = 0.0, show_arrow: bool = False):
 def generate_bow() -> StaticSprite:
     img = new_sprite()
     _draw_bow_frame(img, 0.0, True)
-    draw_outline(img)
+    draw_outline_thick(img)
     return StaticSprite("weapon_bow", img, "weapons")
 
 
@@ -578,7 +578,7 @@ def generate_bow_shoot() -> SpriteSheet:
             put_pixel(img, 15, 7, wp.highlight("steel"))
             put_pixel(img, 15, 6, wp.base("steel"))
             put_pixel(img, 15, 8, wp.base("steel"))
-        draw_outline(img)
+        draw_outline_thick(img)
         frames.append(img)
     return SpriteSheet("weapon_bow_shoot", frames,
                        frame_durations_ms=[120, 100, 80, 120, 50, 100], loop=False)
@@ -608,7 +608,7 @@ def generate_crossbow() -> StaticSprite:
     # Trigger
     put_pixel(img, 9, 10, wp.base("iron"))
     put_pixel(img, 9, 11, wp.base("iron"))
-    draw_outline(img)
+    draw_outline_thick(img)
     return StaticSprite("weapon_crossbow", img, "weapons")
 
 
@@ -642,7 +642,7 @@ def generate_shuriken_spin() -> SpriteSheet:
         put_pixel(img, 7, 8, wp.shadow("dark_metal"))
         put_pixel(img, 8, 8, wp.shadow("dark_metal"))
 
-        draw_outline(img)
+        draw_outline_thick(img)
         frames.append(img)
     return SpriteSheet("weapon_shuriken_spin", frames, frame_duration_ms=60, loop=True)
 
@@ -671,7 +671,7 @@ def generate_staff() -> StaticSprite:
     put_pixel(img, 8, 3, wp.shadow("crystal"))
     # Glow dot
     put_pixel(img, 7, 2, (230, 240, 255))
-    draw_outline(img)
+    draw_outline_thick(img)
     return StaticSprite("weapon_staff", img, "weapons")
 
 
@@ -711,7 +711,7 @@ def generate_staff_charge() -> SpriteSheet:
             if 0 <= sx < 16 and 0 <= sy < 16:
                 put_pixel(img, sx, sy, wp.highlight("magic_white"))
 
-        draw_outline(img)
+        draw_outline_thick(img)
         frames.append(img)
     return SpriteSheet("weapon_staff_charge", frames, frame_duration_ms=100, loop=False)
 
@@ -733,7 +733,7 @@ def generate_wand() -> StaticSprite:
     put_pixel(img, 8, 4, wp.shadow("magic_purple"))
     # Glow
     put_pixel(img, 7, 3, (220, 200, 255))
-    draw_outline(img)
+    draw_outline_thick(img)
     return StaticSprite("weapon_wand", img, "weapons")
 
 
@@ -777,7 +777,7 @@ def generate_orb_pulse() -> SpriteSheet:
                     if 0 <= gx < 16 and 0 <= gy < 16:
                         put_pixel(img, gx, gy, glow_color)
 
-        draw_outline(img)
+        draw_outline_thick(img)
         frames.append(img)
     return SpriteSheet("weapon_orb_pulse", frames, frame_duration_ms=120, loop=True)
 
@@ -803,7 +803,7 @@ def generate_round_shield() -> StaticSprite:
         ry = 7 + round(math.sin(a) * 5)
         if 0 <= rx < 16 and 0 <= ry < 16:
             put_pixel(img, rx, ry, wp.base("gold_metal"))
-    draw_outline(img)
+    draw_outline_thick(img)
     return StaticSprite("weapon_round_shield", img, "weapons")
 
 
@@ -831,7 +831,7 @@ def generate_kite_shield() -> StaticSprite:
     # Cross
     for x in range(5, 10):
         put_pixel(img, x, 5, wp.base("gold_metal"))
-    draw_outline(img)
+    draw_outline_thick(img)
     return StaticSprite("weapon_kite_shield", img, "weapons")
 
 
@@ -855,7 +855,7 @@ def generate_tower_shield() -> StaticSprite:
     # Boss
     put_pixel(img, 7, 8, wp.base("gold_metal"))
     put_pixel(img, 8, 8, wp.highlight("gold_metal"))
-    draw_outline(img)
+    draw_outline_thick(img)
     return StaticSprite("weapon_tower_shield", img, "weapons")
 
 
@@ -870,7 +870,7 @@ def generate_fire_sword() -> SpriteSheet:
         img = new_sprite()
         _draw_sword(img)
         _add_enchantment_particles(img, "fire", f, seed=100)
-        draw_outline(img)
+        draw_outline_thick(img)
         frames.append(img)
     return SpriteSheet("weapon_fire_sword", frames, frame_duration_ms=100, loop=True)
 
@@ -891,7 +891,7 @@ def generate_ice_sword() -> SpriteSheet:
                     nr = max(0, r - 40)
                     nb = min(255, b + 40)
                     put_pixel(img, x, y, (nr, g, nb, a))
-        draw_outline(img)
+        draw_outline_thick(img)
         frames.append(img)
     return SpriteSheet("weapon_ice_sword", frames, frame_duration_ms=120, loop=True)
 
@@ -910,7 +910,7 @@ def generate_lightning_axe() -> SpriteSheet:
                     r, g, b, a = get_pixel(img, x, y)
                     if a > 0:
                         put_pixel(img, x, y, (min(255, r + 60), min(255, g + 60), min(255, b + 30), a))
-        draw_outline(img)
+        draw_outline_thick(img)
         frames.append(img)
     return SpriteSheet("weapon_lightning_axe", frames, frame_duration_ms=80, loop=True)
 
@@ -945,7 +945,7 @@ def generate_poison_dagger() -> SpriteSheet:
         if drip_y < 16:
             put_pixel(img, 7, drip_y, wp.base("poison") + (180,))
 
-        draw_outline(img)
+        draw_outline_thick(img)
         frames.append(img)
     return SpriteSheet("weapon_poison_dagger", frames, frame_duration_ms=120, loop=True)
 
@@ -973,7 +973,7 @@ def generate_legendary_sword() -> StaticSprite:
         put_pixel(img, 7, y, wp.base("leather"))
         put_pixel(img, 8, y, wp.shadow("leather"))
     put_pixel(img, 7, 15, wp.base("crystal"))
-    draw_outline(img)
+    draw_outline_thick(img)
     _add_rarity_glow(img, "legendary")
     return StaticSprite("weapon_legendary_sword", img, "weapons")
 
@@ -994,7 +994,7 @@ def generate_epic_staff() -> StaticSprite:
     put_pixel(img, 7, 3, wp.base("magic_purple"))
     put_pixel(img, 8, 3, wp.shadow("magic_purple"))
     put_pixel(img, 7, 2, (230, 200, 255))
-    draw_outline(img)
+    draw_outline_thick(img)
     _add_rarity_glow(img, "epic")
     return StaticSprite("weapon_epic_staff", img, "weapons")
 

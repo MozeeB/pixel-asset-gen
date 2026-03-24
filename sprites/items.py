@@ -3,7 +3,7 @@ Item sprites: weapons, potions, gems, misc.
 All with outlines and shading.
 """
 
-from engine.drawing import new_sprite, put_pixel, draw_outline, apply_shading_auto
+from engine.drawing import new_sprite, put_pixel, draw_outline_thick, apply_shading_auto
 from engine.palette import ITEMS, TERRAIN, PLAYER, ShadedColor, recolor
 from engine.sprite import StaticSprite
 
@@ -11,7 +11,7 @@ from engine.sprite import StaticSprite
 def _finalize(img, shade_map=None):
     if shade_map:
         img = apply_shading_auto(img, shade_map)
-    return draw_outline(img)
+    return draw_outline_thick(img)
 
 
 # ============================================================

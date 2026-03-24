@@ -2,7 +2,7 @@
 Terrain tiles with fractal noise and auto-tile edge variants.
 """
 
-from engine.drawing import new_sprite, put_pixel, dither_fill
+from engine.drawing import new_sprite, put_pixel, dither_fill, draw_outline_thick
 from engine.palette import TERRAIN, TRANSPARENT
 from engine.noise import noise_map, fractal_noise
 from engine.sprite import SpriteSheet, StaticSprite

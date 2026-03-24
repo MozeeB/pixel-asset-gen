@@ -8,7 +8,7 @@ flag wave, windmill spin, fountain splash, torch flicker, lantern sway).
 
 import math
 from engine.drawing import (
-    new_sprite, put_pixel, draw_outline, draw_rect, draw_line,
+    new_sprite, put_pixel, draw_outline, draw_outline_thick, draw_rect, draw_line,
     draw_circle, dither_fill,
 )
 from engine.palette import BUILDINGS as B, OBJECTS as OB, EFFECTS as EF
@@ -164,7 +164,7 @@ def generate_house_idle(seed: int = 1000) -> SpriteSheet:
         _draw_chimney(img, 12, 3, 5)
         # Smoke animation
         _draw_smoke_puff(img, 12, 2, f)
-        frames.append(draw_outline(img))
+        frames.append(draw_outline_thick(img))
     return SpriteSheet("house_idle", frames, frame_duration_ms=200, loop=True)
 
 
@@ -177,7 +177,7 @@ def generate_house_brick(seed: int = 1010) -> StaticSprite:
     _draw_window(img, 3, 10, glowing=True)
     _draw_window(img, 11, 10, glowing=True)
     _draw_chimney(img, 2, 3, 5)
-    return StaticSprite("house_brick", draw_outline(img), category="buildings")
+    return StaticSprite("house_brick", draw_outline_thick(img), category="buildings")
 
 
 def generate_house_wood(seed: int = 1020) -> StaticSprite:
@@ -188,7 +188,7 @@ def generate_house_wood(seed: int = 1020) -> StaticSprite:
     _draw_door(img, 7, 11, 3, 4)
     _draw_window(img, 4, 10, glowing=False)
     _draw_window(img, 10, 10, glowing=False)
-    return StaticSprite("house_wood", draw_outline(img), category="buildings")
+    return StaticSprite("house_wood", draw_outline_thick(img), category="buildings")
 
 
 # ============================================================
@@ -220,7 +220,7 @@ def generate_shop_idle(seed: int = 1100) -> SpriteSheet:
         glow_alpha = int(180 + 60 * math.sin(f * math.pi / 3))
         lx, ly = 1, 5
         put_pixel(img, lx, ly, (*B.base("lantern")[:3], min(255, glow_alpha)))
-        frames.append(draw_outline(img))
+        frames.append(draw_outline_thick(img))
     return SpriteSheet("shop_idle", frames, frame_duration_ms=150, loop=True)
 
 
@@ -273,7 +273,7 @@ def generate_castle_idle(seed: int = 1200) -> SpriteSheet:
                 put_pixel(img, flag_px, flag_py, B.base("flag"))
                 if flag_py + 1 < 16:
                     put_pixel(img, flag_px, flag_py + 1, B.shadow("flag"))
-        frames.append(draw_outline(img))
+        frames.append(draw_outline_thick(img))
     return SpriteSheet("castle_idle", frames, frame_duration_ms=150, loop=True)
 
 
@@ -304,7 +304,7 @@ def generate_church(seed: int = 1300) -> StaticSprite:
     put_pixel(img, 8, 9, B.base("window_glow"))
     # Door
     _draw_door(img, 7, 12, 3, 3)
-    return StaticSprite("church", draw_outline(img), category="buildings")
+    return StaticSprite("church", draw_outline_thick(img), category="buildings")
 
 
 # ============================================================
@@ -334,7 +334,7 @@ def generate_tower_idle(seed: int = 1400) -> SpriteSheet:
             _draw_window(img, wx, wy, glowing=glow_on, frame=1)
         # Base
         draw_rect(img, 4, 14, 8, 2, B.base("stone_dark"), filled=True)
-        frames.append(draw_outline(img))
+        frames.append(draw_outline_thick(img))
     return SpriteSheet("tower_idle", frames, frame_duration_ms=180, loop=True)
 
 
@@ -369,7 +369,7 @@ def generate_inn_idle(seed: int = 1500) -> SpriteSheet:
         # Chimney smoke
         _draw_chimney(img, 14, 0, 2)
         _draw_smoke_puff(img, 14, -1, f)
-        frames.append(draw_outline(img))
+        frames.append(draw_outline_thick(img))
     return SpriteSheet("inn_idle", frames, frame_duration_ms=150, loop=True)
 
 
@@ -410,7 +410,7 @@ def generate_blacksmith_idle(seed: int = 1600) -> SpriteSheet:
         _draw_door(img, 10, 11, 3, 4)
         # Window
         _draw_window(img, 11, 7, glowing=(f % 2 == 0))
-        frames.append(draw_outline(img))
+        frames.append(draw_outline_thick(img))
     return SpriteSheet("blacksmith_idle", frames, frame_duration_ms=120, loop=True)
 
 
@@ -461,7 +461,7 @@ def generate_windmill_spin(seed: int = 1700) -> SpriteSheet:
                             ppy = by + int(math.sin(perp_angle) * pd)
                             if 0 <= ppx < 16 and 0 <= ppy < 16:
                                 put_pixel(img, ppx, ppy, B.base("wood_wall"))
-        frames.append(draw_outline(img))
+        frames.append(draw_outline_thick(img))
     return SpriteSheet("windmill_spin", frames, frame_duration_ms=150, loop=True)
 
 
@@ -499,7 +499,7 @@ def generate_barn(seed: int = 1800) -> StaticSprite:
     put_pixel(img, 7, 5, B.base("sign_wood"))
     put_pixel(img, 8, 5, B.highlight("sign_wood"))
     put_pixel(img, 9, 5, B.base("sign_wood"))
-    return StaticSprite("barn", draw_outline(img), category="buildings")
+    return StaticSprite("barn", draw_outline_thick(img), category="buildings")
 
 
 # ============================================================
@@ -548,7 +548,7 @@ def generate_well_idle(seed: int = 1900) -> SpriteSheet:
         rope_swing = int(math.sin(f * math.pi / 4) * 0.8)
         put_pixel(img, 8 + rope_swing, 4, B.base("sign_wood"))
         put_pixel(img, 8 + rope_swing, 5, B.base("sign_wood"))
-        frames.append(draw_outline(img))
+        frames.append(draw_outline_thick(img))
     return SpriteSheet("well_idle", frames, frame_duration_ms=200, loop=True)
 
 
@@ -602,7 +602,7 @@ def generate_fountain_splash(seed: int = 2000) -> SpriteSheet:
             dpy = 6 + dy
             if 0 <= dpx < 16 and 0 <= dpy < 16 and drop_t < 0.8:
                 put_pixel(img, dpx, dpy, OB.base("water_foam"))
-        frames.append(draw_outline(img))
+        frames.append(draw_outline_thick(img))
     return SpriteSheet("fountain_splash", frames, frame_duration_ms=120, loop=True)
 
 
@@ -632,7 +632,7 @@ def generate_bridge(seed: int = 2100) -> StaticSprite:
     for px in range(0, 16):
         put_pixel(img, px, 4, B.base("wood_wall"))
         put_pixel(img, px, 11, B.base("wood_wall"))
-    return StaticSprite("bridge", draw_outline(img), category="buildings")
+    return StaticSprite("bridge", draw_outline_thick(img), category="buildings")
 
 
 # ============================================================
@@ -665,7 +665,7 @@ def generate_ruins(seed: int = 2200) -> StaticSprite:
         for py in range(10, 15):
             if nmap[py][px] > 0.7:
                 put_pixel(img, px, py, OB.base("rock_moss"))
-    return StaticSprite("ruins", draw_outline(img), category="buildings")
+    return StaticSprite("ruins", draw_outline_thick(img), category="buildings")
 
 
 # ============================================================
@@ -713,7 +713,7 @@ def generate_dungeon_entrance_idle(seed: int = 2300) -> SpriteSheet:
             if px % 2 == 0:
                 for py in range(5, 10):
                     put_pixel(img, px, py, B.base("iron_bar"))
-        frames.append(draw_outline(img))
+        frames.append(draw_outline_thick(img))
     return SpriteSheet("dungeon_entrance_idle", frames, frame_duration_ms=130, loop=True)
 
 
@@ -755,7 +755,7 @@ def generate_lighthouse_idle(seed: int = 2400) -> SpriteSheet:
         put_pixel(img, 8, 0, B.base("roof_red"))
         # Base
         draw_rect(img, 5, 14, 6, 2, B.base("stone_wall"), filled=True)
-        frames.append(draw_outline(img))
+        frames.append(draw_outline_thick(img))
     return SpriteSheet("lighthouse_idle", frames, frame_duration_ms=150, loop=True)
 
 
@@ -790,7 +790,7 @@ def generate_tent(seed: int = 2500) -> StaticSprite:
     for py in range(10, 14):
         put_pixel(img, 7, py, B.shadow("flag"))
         put_pixel(img, 9, py, B.shadow("flag"))
-    return StaticSprite("tent", draw_outline(img), category="buildings")
+    return StaticSprite("tent", draw_outline_thick(img), category="buildings")
 
 
 # ============================================================
@@ -829,7 +829,7 @@ def generate_watchtower_idle(seed: int = 2600) -> SpriteSheet:
         fc = fire_colors[f % 3]
         put_pixel(img, 7, 3, B.base("wood_dark"))  # bracket
         put_pixel(img, 7, 2, fc)
-        frames.append(draw_outline(img))
+        frames.append(draw_outline_thick(img))
     return SpriteSheet("watchtower_idle", frames, frame_duration_ms=140, loop=True)
 
 
@@ -867,7 +867,7 @@ def generate_crystal_cave_idle(seed: int = 2700) -> SpriteSheet:
             put_pixel(img, cx, cy - 1, (*B.base("crystal_wall")[:3], min(255, alpha - 30)))
             if cy + 1 < 16:
                 put_pixel(img, cx, cy + 1, (*B.base("crystal_wall")[:3], min(255, alpha - 60)))
-        frames.append(draw_outline(img))
+        frames.append(draw_outline_thick(img))
     return SpriteSheet("crystal_cave_idle", frames, frame_duration_ms=160, loop=True)
 
 
@@ -906,7 +906,7 @@ def generate_market_stall(seed: int = 2800) -> StaticSprite:
     # Ground cloth
     for px in range(2, 14):
         put_pixel(img, px, 14, B.base("banner"))
-    return StaticSprite("market_stall", draw_outline(img), category="buildings")
+    return StaticSprite("market_stall", draw_outline_thick(img), category="buildings")
 
 
 # ============================================================

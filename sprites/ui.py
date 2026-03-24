@@ -3,7 +3,7 @@ UI elements: hearts, mana orb, health bars, buttons, inventory.
 """
 
 from PIL import Image, ImageDraw
-from engine.drawing import new_sprite, put_pixel, draw_outline, create_spritesheet
+from engine.drawing import new_sprite, put_pixel, draw_outline_thick, create_spritesheet
 from engine.palette import UI, TRANSPARENT
 from engine.sprite import StaticSprite, SpriteSheet
 
@@ -38,7 +38,7 @@ def generate_heart_full() -> StaticSprite:
     put_pixel(img, 7, 11, u.shadow("heart"))
     put_pixel(img, 8, 11, u.shadow("heart"))
 
-    return StaticSprite("heart_full", draw_outline(img), "ui")
+    return StaticSprite("heart_full", draw_outline_thick(img), "ui")
 
 
 def generate_heart_empty() -> StaticSprite:
@@ -62,7 +62,7 @@ def generate_heart_empty() -> StaticSprite:
     for (x, y) in heart_pixels:
         put_pixel(img, x, y, u.shadow("heart"))
 
-    return StaticSprite("heart_empty", draw_outline(img), "ui")
+    return StaticSprite("heart_empty", draw_outline_thick(img), "ui")
 
 
 def generate_heart_half() -> StaticSprite:
@@ -91,7 +91,7 @@ def generate_heart_half() -> StaticSprite:
         else:
             put_pixel(img, x, y, u.shadow("heart"))
 
-    return StaticSprite("heart_half", draw_outline(img), "ui")
+    return StaticSprite("heart_half", draw_outline_thick(img), "ui")
 
 
 def generate_mana_orb() -> StaticSprite:
@@ -116,7 +116,7 @@ def generate_mana_orb() -> StaticSprite:
     put_pixel(img, 9, 9, u.shadow("mana"))
     put_pixel(img, 8, 10, u.shadow("mana"))
 
-    return StaticSprite("mana_orb", draw_outline(img), "ui")
+    return StaticSprite("mana_orb", draw_outline_thick(img), "ui")
 
 
 def generate_healthbar(fill_pct: float = 1.0, name_suffix: str = "") -> StaticSprite:

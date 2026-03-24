@@ -4,7 +4,7 @@ Procedurally generated sprite sheets using sine waves, noise, and physics.
 """
 
 import math
-from engine.drawing import new_sprite, put_pixel, draw_outline, draw_circle, draw_line
+from engine.drawing import new_sprite, put_pixel, draw_outline, draw_outline_thick, draw_circle, draw_line
 from engine.palette import OBJECTS
 from engine.noise import noise_map, fractal_noise
 from engine.sprite import SpriteSheet
@@ -58,7 +58,7 @@ def generate_rock_idle(seed: int = 500) -> SpriteSheet:
         # Subtle vertical wobble: 0 or 1 pixel shift
         y_off = round(math.sin(f * math.pi / 4) * 0.6)
         _draw_rock(img, 0, 4 + y_off, seed=seed)
-        draw_outline(img)
+        draw_outline_thick(img)
         frames.append(img)
     return SpriteSheet("rock_idle", frames, frame_duration_ms=200, loop=True)
 
@@ -90,7 +90,7 @@ def generate_rock_crumble(seed: int = 510) -> SpriteSheet:
         if f == 0:
             # Full rock
             _draw_rock(img, 0, 4, seed=seed)
-            draw_outline(img)
+            draw_outline_thick(img)
         else:
             # Fragments fly outward with gravity
             t = f * 0.4
@@ -382,7 +382,7 @@ def generate_tree_sway(seed: int = 800) -> SpriteSheet:
                             color = ob.shadow("canopy")
                         put_pixel(img, px, py, color)
 
-        draw_outline(img)
+        draw_outline_thick(img)
         frames.append(img)
     return SpriteSheet("tree_sway", frames, frame_duration_ms=150, loop=True)
 

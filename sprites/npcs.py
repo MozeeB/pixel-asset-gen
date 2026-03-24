@@ -3,7 +3,7 @@ NPC sprites: villager and merchant, with outlines and shading.
 Each NPC has idle and hit (2-frame flinch) animations.
 """
 
-from engine.drawing import new_sprite, put_pixel, draw_outline, apply_shading_auto
+from engine.drawing import new_sprite, put_pixel, draw_outline, draw_outline_thick, apply_shading_auto
 from engine.palette import PLAYER, ITEMS, ShadedColor
 from engine.sprite import SpriteSheet
 
@@ -32,7 +32,7 @@ BLONDE_SHADED = ShadedColor.from_base(BLONDE)
 
 def _shade_and_outline(img, shade_map):
     img = apply_shading_auto(img, shade_map)
-    return draw_outline(img)
+    return draw_outline_thick(img)
 
 
 def generate_villager() -> SpriteSheet:

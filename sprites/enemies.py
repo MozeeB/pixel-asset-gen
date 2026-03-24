@@ -5,7 +5,7 @@ Each enemy has idle, hit (2 frames), and death (4 frames) animations.
 """
 
 from engine.drawing import (
-    new_sprite, put_pixel, draw_outline, apply_shading_auto,
+    new_sprite, put_pixel, draw_outline, draw_outline_thick, apply_shading_auto,
     draw_circle, draw_ellipse_filled,
 )
 from engine.palette import ENEMIES, ShadedColor, recolor
@@ -15,7 +15,7 @@ from engine.sprite import SpriteSheet, StaticSprite
 def _shade_and_outline(img, shade_map=None):
     if shade_map:
         img = apply_shading_auto(img, shade_map)
-    return draw_outline(img)
+    return draw_outline_thick(img)
 
 
 def _apply_flash(img, intensity: float = 0.7):

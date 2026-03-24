@@ -4,7 +4,7 @@ attack, jump, hit, and death. With outline and 3-tier shading applied.
 """
 
 from engine.drawing import (
-    new_sprite, put_pixel, draw_outline, apply_shading_auto,
+    new_sprite, put_pixel, draw_outline, draw_outline_thick, apply_shading_auto,
     mirror_horizontal, draw_rect, get_pixel,
 )
 from engine.palette import PLAYER, ShadedColor, TRANSPARENT
@@ -135,7 +135,7 @@ def _draw_player_up(y_off: int = 0) -> "Image.Image":
 def _finalize(img):
     """Apply shading and outline to a player frame."""
     img = apply_shading_auto(img, _SHADE_MAP)
-    return draw_outline(img)
+    return draw_outline_thick(img)
 
 
 def generate_idle_right() -> SpriteSheet:

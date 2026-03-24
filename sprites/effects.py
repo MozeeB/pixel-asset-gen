@@ -6,7 +6,7 @@ screen flash.
 """
 
 import math
-from engine.drawing import new_sprite, put_pixel, draw_outline, draw_circle, draw_line
+from engine.drawing import new_sprite, put_pixel, draw_outline, draw_outline_thick, draw_circle, draw_line
 from engine.palette import EFFECTS
 from engine.sprite import SpriteSheet
 

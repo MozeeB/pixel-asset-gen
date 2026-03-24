@@ -1,10 +1,11 @@
 """
 Drawing primitives for pixel art: line, circle, fill, outline, shading, dithering.
+Kingdom Rush style: thick warm outlines, texture patterns, cel-shaded volumes.
 All operations work on Pillow RGBA images and never mutate — they return new images.
 """
 
 from PIL import Image
-from engine.palette import RGB, RGBA, TRANSPARENT, ShadedColor
+from engine.palette import RGB, RGBA, TRANSPARENT, ShadedColor, KR_OUTLINE
 
 
 def new_sprite(width: int = 16, height: int = 16) -> Image.Image:
@@ -54,7 +55,8 @@ def draw_line(img: Image.Image, x0: int, y0: int, x1: int, y1: int, color: RGB |
             y0 += sy
 
 
-def draw_circle(img: Image.Image, cx: int, cy: int, r: int, color: RGB | RGBA, filled: bool = False) -> None:
+def draw_circle(img: Image.Image, cx: int, cy: int, r: int,
+                color: RGB | RGBA, filled: bool = False) -> None:
     """Midpoint circle algorithm, optionally filled."""
     x = r
     y = 0
@@ -81,7 +83,8 @@ def draw_circle(img: Image.Image, cx: int, cy: int, r: int, color: RGB | RGBA, f
             d += 2 * (y - x) + 1
 
 
-def draw_rect(img: Image.Image, x: int, y: int, w: int, h: int, color: RGB | RGBA, filled: bool = True) -> None:
+def draw_rect(img: Image.Image, x: int, y: int, w: int, h: int,
+              color: RGB | RGBA, filled: bool = True) -> None:
     """Draw a rectangle, optionally filled."""
     if filled:
         for py in range(y, y + h):
@@ -94,7 +97,8 @@ def draw_rect(img: Image.Image, x: int, y: int, w: int, h: int, color: RGB | RGB
         draw_line(img, x + w - 1, y, x + w - 1, y + h - 1, color)
 
 
-def draw_ellipse_filled(img: Image.Image, cx: int, cy: int, rx: int, ry: int, color: RGB | RGBA) -> None:
+def draw_ellipse_filled(img: Image.Image, cx: int, cy: int, rx: int, ry: int,
+                        color: RGB | RGBA) -> None:
     """Draw a filled ellipse."""
     for y in range(-ry, ry + 1):
         for x in range(-rx, rx + 1):
@@ -127,8 +131,9 @@ def flood_fill(img: Image.Image, x: int, y: int, color: RGB | RGBA) -> None:
         stack.extend([(cx + 1, cy), (cx - 1, cy), (cx, cy + 1), (cx, cy - 1)])
 
 
-def draw_outline(img: Image.Image, outline_color: RGB = (30, 30, 30)) -> Image.Image:
-    """Return a new image with a 1px outline around all non-transparent pixels."""
+def draw_outline(img: Image.Image, outline_color: RGB = KR_OUTLINE) -> Image.Image:
+    """Return a new image with a 1px outline around all non-transparent pixels.
+    Default: Kingdom Rush warm dark brown outline."""
     result = img.copy()
     oc = (*outline_color, 255) if len(outline_color) == 3 else outline_color
     w, h = img.size
@@ -149,16 +154,134 @@ def draw_outline(img: Image.Image, outline_color: RGB = (30, 30, 30)) -> Image.I
     return result
 
 
+def draw_outline_thick(img: Image.Image, outline_color: RGB = KR_OUTLINE,
+                       thickness: int = 2) -> Image.Image:
+    """Return a new image with a thick outline (KR style 2px default).
+    Checks pixels within `thickness` radius of non-transparent pixels."""
+    result = img.copy()
+    oc = (*outline_color, 255) if len(outline_color) == 3 else outline_color
+    w, h = img.size
+
+    # Build set of non-transparent pixel coords
+    filled = set()
+    for y in range(h):
+        for x in range(w):
+            if img.getpixel((x, y))[3] > 0:
+                filled.add((x, y))
+
+    # For each transparent pixel, check if any filled pixel is within range
+    for y in range(h):
+        for x in range(w):
+            if (x, y) in filled:
+                continue
+            found = False
+            for dy in range(-thickness, thickness + 1):
+                for dx in range(-thickness, thickness + 1):
+                    if dx == 0 and dy == 0:
+                        continue
+                    if abs(dx) + abs(dy) > thickness:
+                        continue  # Manhattan distance check
+                    if (x + dx, y + dy) in filled:
+                        found = True
+                        break
+                if found:
+                    break
+            if found:
+                result.putpixel((x, y), oc)
+    return result
+
+
+# ============================================================
+# TEXTURE PATTERN HELPERS (Kingdom Rush style)
+# ============================================================
+
+def draw_brick_pattern(img: Image.Image, x: int, y: int, w: int, h: int,
+                       brick_color: RGB, mortar_color: RGB,
+                       brick_h: int = 3, brick_w: int = 5) -> None:
+    """Fill area with brick pattern — mortar lines every brick_h/brick_w pixels."""
+    for py in range(y, y + h):
+        for px in range(x, x + w):
+            row = (py - y) // brick_h
+            # Offset every other row
+            offset = (brick_w // 2) * (row % 2)
+            col_pos = ((px - x) + offset) % brick_w
+            row_pos = (py - y) % brick_h
+            # Mortar on edges
+            if row_pos == brick_h - 1 or col_pos == brick_w - 1:
+                put_pixel(img, px, py, mortar_color)
+            else:
+                put_pixel(img, px, py, brick_color)
+
+
+def draw_plank_pattern(img: Image.Image, x: int, y: int, w: int, h: int,
+                       plank_color: RGB, gap_color: RGB,
+                       plank_w: int = 4, vertical: bool = True) -> None:
+    """Fill with wood plank pattern — 1px gaps between planks."""
+    for py in range(y, y + h):
+        for px in range(x, x + w):
+            if vertical:
+                is_gap = ((px - x) % plank_w) == plank_w - 1
+            else:
+                is_gap = ((py - y) % plank_w) == plank_w - 1
+            put_pixel(img, px, py, gap_color if is_gap else plank_color)
+
+
+def draw_stone_texture(img: Image.Image, x: int, y: int, w: int, h: int,
+                       base_color: RGB, crack_color: RGB, seed: int = 42) -> None:
+    """Noise-based stone with crack lines for KR style."""
+    import math
+    for py in range(y, y + h):
+        for px in range(x, x + w):
+            # Simple deterministic noise
+            n = math.sin(px * 12.9898 + py * 78.233 + seed) * 43758.5453
+            n = n - int(n)
+            if abs(n) < 0.12:
+                put_pixel(img, px, py, crack_color)
+            else:
+                put_pixel(img, px, py, base_color)
+
+
+def draw_grass_spikes(img: Image.Image, base_y: int,
+                      colors: list[RGB], seed: int = 0) -> None:
+    """Kingdom Rush style grass: pointed triangular blades rising from base_y."""
+    import math
+    w = img.width
+    for i in range(0, w, 2):
+        # Vary height per blade
+        n = math.sin(i * 7.13 + seed * 3.7) * 0.5 + 0.5
+        blade_h = int(3 + n * 4)
+        color_idx = int(n * len(colors)) % len(colors)
+        color = colors[color_idx]
+        # Draw triangular blade
+        tip_x = i + (1 if n > 0.5 else 0)
+        for h in range(blade_h):
+            y = base_y - h
+            half_w = max(0, (blade_h - h) // 2)
+            for dx in range(-half_w, half_w + 1):
+                put_pixel(img, tip_x + dx, y, color)
+
+
+def draw_thatch_pattern(img: Image.Image, x: int, y: int, w: int, h: int,
+                        color1: RGB, color2: RGB) -> None:
+    """Cross-hatch thatch roof pattern."""
+    for py in range(y, y + h):
+        for px in range(x, x + w):
+            if ((px - x) + (py - y)) % 3 == 0:
+                put_pixel(img, px, py, color2)
+            else:
+                put_pixel(img, px, py, color1)
+
+
+# ============================================================
+# SHADING & COMPOSITION
+# ============================================================
+
 def apply_shading(img: Image.Image, base_color: RGB, shaded: ShadedColor,
                   light_dir: str = "top_left") -> Image.Image:
     """Replace all pixels matching base_color with shaded tiers based on position.
-
-    Pixels in the top-left quadrant of the shape get highlight,
-    center gets base, bottom-right gets shadow.
-    """
+    KR style: bold 3-tier cel shading, hard transitions."""
     result = img.copy()
     w, h = img.size
-    base_rgba = (*base_color, 255)
 
     # Find bounding box of matching pixels
     min_x, min_y, max_x, max_y = w, h, 0, 0
@@ -180,7 +303,6 @@ def apply_shading(img: Image.Image, base_color: RGB, shaded: ShadedColor,
     range_y = max(max_y - min_y, 1)
 
     for x, y in matching:
-        # Normalized position within bounding box (0..1)
         nx = (x - min_x) / range_x
         ny = (y - min_y) / range_y
 
