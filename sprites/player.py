@@ -322,65 +322,159 @@ def generate_run_up() -> SpriteSheet:
 # ATTACK (6 frames, variable timing — 4 directions)
 # ============================================================
 
+def _draw_sword_pixels(img, positions, blade_color, guard_color, handle_color):
+    """Draw a multi-pixel sword at given positions.
+    positions: list of (x,y) from handle to tip."""
+    if len(positions) >= 1:
+        put_pixel(img, positions[0][0], positions[0][1], handle_color)
+    if len(positions) >= 2:
+        put_pixel(img, positions[1][0], positions[1][1], guard_color)
+    for pos in positions[2:]:
+        put_pixel(img, pos[0], pos[1], blade_color)
+        # Add blade width (1px adjacent for thicker sword)
+        put_pixel(img, pos[0], pos[1] - 1, blade_color)
+
+
 def generate_attack_right() -> SpriteSheet:
-    metal = PLAYER.highlight("belt")
+    blade = PLAYER.highlight("belt")
+    guard = (130, 85, 45)   # warm brown guard
+    handle = (90, 58, 32)   # dark wood handle
+    slash = (225, 225, 235)  # white slash trail
     frames = []
-    sword_arcs = [
-        [(12, 4), (13, 3)],
-        [(12, 3), (13, 2), (14, 2)],
-        [(12, 5), (13, 4), (14, 3), (15, 2)],
-        [(12, 7), (13, 8), (14, 9)],
-        [(12, 8), (13, 9)],
-        [(12, 6)],
-    ]
-    for i in range(6):
-        frame = _draw_player_right()
-        for pos in sword_arcs[i]:
-            put_pixel(frame, pos[0], pos[1], metal)
-        frames.append(_finalize(frame))
-    # Variable timing: slow wind-up, fast strike, slow recovery
+
+    # Frame 0: wind-up — sword behind, arm back
+    f = _draw_player_right(arm_swing=-1)
+    _draw_sword_pixels(f, [(11, 8), (12, 7), (13, 5), (13, 4), (14, 3)], blade, guard, handle)
+    frames.append(_finalize(f))
+
+    # Frame 1: raise overhead
+    f = _draw_player_right(arm_swing=-1)
+    _draw_sword_pixels(f, [(11, 5), (12, 4), (13, 2), (14, 1), (15, 0)], blade, guard, handle)
+    frames.append(_finalize(f))
+
+    # Frame 2: fast downward slash — sword diagonal with trail
+    f = _draw_player_right()
+    _draw_sword_pixels(f, [(12, 5), (13, 6), (14, 7), (15, 8)], blade, guard, handle)
+    # Slash trail arc
+    for pos in [(13, 3), (14, 4), (15, 5), (15, 6)]:
+        put_pixel(f, pos[0], pos[1], slash)
+    frames.append(_finalize(f))
+
+    # Frame 3: impact — sword low, big slash arc
+    f = _draw_player_right(arm_swing=1)
+    _draw_sword_pixels(f, [(12, 8), (13, 9), (14, 10), (15, 11)], blade, guard, handle)
+    # Wider slash trail
+    for pos in [(12, 4), (13, 5), (14, 6), (15, 7), (14, 8), (13, 9)]:
+        put_pixel(f, pos[0], pos[1], slash)
+    frames.append(_finalize(f))
+
+    # Frame 4: follow-through — sword past
+    f = _draw_player_right(arm_swing=1)
+    _draw_sword_pixels(f, [(12, 10), (13, 11), (14, 12)], blade, guard, handle)
+    # Fading trail
+    for pos in [(13, 8), (14, 9)]:
+        put_pixel(f, pos[0], pos[1], (*slash[:3], 128))
+    frames.append(_finalize(f))
+
+    # Frame 5: recovery — sword at side
+    f = _draw_player_right()
+    _draw_sword_pixels(f, [(11, 7), (12, 8), (13, 9)], blade, guard, handle)
+    frames.append(_finalize(f))
+
     return SpriteSheet("player_attack_right", frames, frame_duration_ms=80, loop=False,
                        frame_durations_ms=[100, 65, 35, 50, 80, 100])
 
 
 def generate_attack_down() -> SpriteSheet:
-    metal = PLAYER.highlight("belt")
+    blade = PLAYER.highlight("belt")
+    guard = (130, 85, 45)
+    handle = (90, 58, 32)
+    slash = (225, 225, 235)
     frames = []
-    # Sword swings downward in front of player
-    sword_arcs = [
-        [(7, 2), (8, 1)],                        # raise overhead
-        [(6, 2), (7, 1), (9, 1), (10, 2)],       # wide raise
-        [(7, 6), (8, 6), (7, 14), (8, 14)],      # swing down
-        [(6, 14), (7, 14), (8, 14), (9, 14)],    # impact
-        [(7, 13), (8, 13)],                        # recovery
-        [(7, 10)],                                 # sheathe
-    ]
-    for i in range(6):
-        frame = _draw_player_down()
-        for pos in sword_arcs[i]:
-            put_pixel(frame, pos[0], pos[1], metal)
-        frames.append(_finalize(frame))
+
+    # Frame 0: raise sword overhead
+    f = _draw_player_down()
+    _draw_sword_pixels(f, [(8, 5), (8, 3), (8, 2), (8, 1), (8, 0)], blade, guard, handle)
+    frames.append(_finalize(f))
+
+    # Frame 1: sword wide overhead
+    f = _draw_player_down()
+    _draw_sword_pixels(f, [(7, 4), (6, 2), (5, 1), (4, 0)], blade, guard, handle)
+    put_pixel(f, 10, 2, blade)
+    put_pixel(f, 11, 1, blade)
+    frames.append(_finalize(f))
+
+    # Frame 2: fast swing down — sword in front with trail
+    f = _draw_player_down()
+    _draw_sword_pixels(f, [(8, 10), (8, 11), (8, 12), (8, 13), (8, 14)], blade, guard, handle)
+    for pos in [(7, 4), (6, 6), (7, 8), (8, 9), (9, 8), (10, 6), (9, 4)]:
+        put_pixel(f, pos[0], pos[1], slash)
+    frames.append(_finalize(f))
+
+    # Frame 3: impact — sword low, wide slash
+    f = _draw_player_down()
+    for x in range(4, 12):
+        put_pixel(f, x, 14, blade)
+        put_pixel(f, x, 15, slash)
+    frames.append(_finalize(f))
+
+    # Frame 4: recovery
+    f = _draw_player_down()
+    _draw_sword_pixels(f, [(11, 8), (12, 9), (13, 10)], blade, guard, handle)
+    frames.append(_finalize(f))
+
+    # Frame 5: sheathe
+    f = _draw_player_down()
+    _draw_sword_pixels(f, [(11, 7), (12, 8)], blade, guard, handle)
+    frames.append(_finalize(f))
+
     return SpriteSheet("player_attack_down", frames, frame_duration_ms=80, loop=False,
                        frame_durations_ms=[100, 65, 35, 50, 80, 100])
 
 
 def generate_attack_up() -> SpriteSheet:
-    metal = PLAYER.highlight("belt")
+    blade = PLAYER.highlight("belt")
+    guard = (130, 85, 45)
+    handle = (90, 58, 32)
+    slash = (225, 225, 235)
     frames = []
-    # Sword swings upward behind player
-    sword_arcs = [
-        [(7, 14), (8, 14)],                       # wind-up low
-        [(7, 10), (8, 10)],                        # raising
-        [(6, 1), (7, 0), (8, 0), (9, 1)],         # overhead arc
-        [(7, 1), (8, 1)],                          # top hold
-        [(7, 3), (8, 3)],                          # follow-through
-        [(7, 6)],                                   # recovery
-    ]
-    for i in range(6):
-        frame = _draw_player_up()
-        for pos in sword_arcs[i]:
-            put_pixel(frame, pos[0], pos[1], metal)
-        frames.append(_finalize(frame))
+
+    # Frame 0: wind-up — sword low behind
+    f = _draw_player_up()
+    _draw_sword_pixels(f, [(8, 12), (8, 13), (8, 14)], blade, guard, handle)
+    frames.append(_finalize(f))
+
+    # Frame 1: raising sword
+    f = _draw_player_up()
+    _draw_sword_pixels(f, [(8, 8), (8, 6), (8, 4), (8, 3)], blade, guard, handle)
+    frames.append(_finalize(f))
+
+    # Frame 2: overhead slash with trail
+    f = _draw_player_up()
+    _draw_sword_pixels(f, [(8, 4), (7, 2), (6, 1), (5, 0)], blade, guard, handle)
+    put_pixel(f, 10, 2, blade)
+    put_pixel(f, 11, 1, blade)
+    for pos in [(7, 6), (6, 4), (8, 4), (9, 3), (10, 3)]:
+        put_pixel(f, pos[0], pos[1], slash)
+    frames.append(_finalize(f))
+
+    # Frame 3: wide arc — slash trails
+    f = _draw_player_up()
+    for x in range(4, 12):
+        put_pixel(f, x, 1, blade)
+        put_pixel(f, x, 0, slash)
+    frames.append(_finalize(f))
+
+    # Frame 4: follow-through
+    f = _draw_player_up()
+    _draw_sword_pixels(f, [(5, 5), (4, 4), (3, 3)], blade, guard, handle)
+    frames.append(_finalize(f))
+
+    # Frame 5: recovery
+    f = _draw_player_up()
+    _draw_sword_pixels(f, [(5, 7), (4, 8)], blade, guard, handle)
+    frames.append(_finalize(f))
+
     return SpriteSheet("player_attack_up", frames, frame_duration_ms=80, loop=False,
                        frame_durations_ms=[100, 65, 35, 50, 80, 100])
 
