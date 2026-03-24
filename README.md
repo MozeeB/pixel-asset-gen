@@ -1,8 +1,8 @@
 # pixel-asset-gen
 
-Procedural pixel art game asset generator. Produces complete, game-ready sprite sheets with animations, JSON metadata, texture atlases, and animated GIF previews — all from a single CLI command.
+Procedural pixel art game asset generator in **Kingdom Rush cel-shaded style**. Produces complete, game-ready sprite sheets with animations, JSON metadata, texture atlases, and animated GIF previews — all from a single CLI command.
 
-**186 assets** (96 animated, 90 static) across 10 categories — generated procedurally using sine waves, fractal noise, and physics simulation. Zero hand-drawn art required.
+**186 assets** (96 animated, 90 static) across 10 categories — generated procedurally using sine waves, fractal noise, and physics simulation. Kingdom Rush-inspired cel-shading with thick warm outlines, muted palettes, and bold shading. Zero hand-drawn art required.
 
 ## Preview
 
@@ -94,6 +94,7 @@ Procedural pixel art game asset generator. Produces complete, game-ready sprite 
 ## Features
 
 - **186 procedural assets** — characters, enemies, NPCs, terrain, items, UI, effects, natural objects, weapons & shields, buildings & structures
+- **Kingdom Rush art style** — cel-shaded with thick warm outlines, muted palettes, no pure black, bold 3-tier shading
 - **Animated sprite sheets** — variable frame timing, looping/one-shot, 4-directional movement
 - **Multi-scale export** — 1x, 2x, 4x (or any custom scales like 3x, 8x)
 - **JSON metadata** — frame counts, timing, hitboxes, anchors, recommended FPS
@@ -103,6 +104,7 @@ Procedural pixel art game asset generator. Produces complete, game-ready sprite 
 - **Seeded procedural generation** — deterministic output, change seed for variation
 - **Quality profiles** — mobile (2x-4x, 2048 atlas) and desktop (1x-4x, 4096 atlas)
 - **Selective generation** — filter by category, name, grep pattern, or exclusion
+- **Godot 4.6 sample project** — fully working demo with player, enemies, weapons, buildings
 - **Pure Python** — only requires Pillow, no other dependencies
 
 ## Installation
@@ -202,21 +204,28 @@ python generate_assets.py --only enemies --hue-shift 0 --output ./enemies_normal
 python generate_assets.py --only enemies --hue-shift 120 --output ./enemies_elite
 python generate_assets.py --only enemies --hue-shift 240 --output ./enemies_boss
 
-# Iterate on one asset with GIF preview
-python generate_assets.py --only objects --types tree_sway --gif --gif-scale 8 --no-atlas
-
-# Find all water-related assets
-python generate_assets.py --grep water --list
-
 # CI/CD validation
 python generate_assets.py --profile mobile --validate-only
 ```
+
+## Art Style
+
+Inspired by **Kingdom Rush** (Ironhide Game Studio):
+
+| Trait | Implementation |
+|-------|---------------|
+| Cel-shading | 3-4 muted tones per surface, hard transitions |
+| Outlines | 2px warm dark brown `(50, 35, 25)`, never pure black |
+| Colors | Muted with grey undertones, warm bias |
+| Shading | Bold HSL: highlight +25%, shadow -30% |
+| Textures | Brick mortar, wood planks, stone cracks, grass spikes |
+| Feel | Chunky, cartoon, comic-book readability |
 
 ## Asset Categories
 
 | Category | Key | Count | Description |
 |----------|-----|-------|-------------|
-| Player | `player` | 7 x 4 dirs | idle, walk, run, attack, jump, hit, death |
+| Player | `player` | 7 x 4 dirs | idle, walk, run, attack (with sword), jump, hit, death |
 | Enemies | `enemies` | 21 | slime (x3 colors), skeleton, bat, ghost, goblin |
 | NPCs | `npcs` | 4 | villager, merchant with animations |
 | Terrain | `terrain` | 42 | 9 tile types + 32 autotile edge variants |
@@ -239,24 +248,6 @@ name.json         # Metadata (frames, timing, hitbox, anchor, FPS)
 name_4x.gif       # Animated preview (with --gif)
 ```
 
-### JSON Metadata
-
-```json
-{
-  "name": "tree_sway",
-  "frame_width": 16,
-  "frame_height": 16,
-  "frame_count": 8,
-  "frame_duration_ms": 150,
-  "loop": true,
-  "hitbox": { "x": 2, "y": 0, "w": 13, "h": 16 },
-  "anchor": { "x": 8, "y": 15 },
-  "total_duration_ms": 1200,
-  "effective_fps": 6.7,
-  "recommended_fps": { "mobile": 8, "desktop": 8 }
-}
-```
-
 ## Quality Profiles
 
 | Setting | Mobile | Desktop |
@@ -271,16 +262,16 @@ name_4x.gif       # Animated preview (with --gif)
 ```
 pixel-asset-gen/
   engine/
-    drawing.py      # Pixel primitives, outlines, shading
+    drawing.py      # Pixel primitives, thick outlines, texture patterns
     sprite.py       # SpriteSheet, DirectionalSprite, StaticSprite
-    palette.py      # Color system with 3-tier shading
+    palette.py      # KR-style muted warm palettes, 3-tier shading
     noise.py        # Fractal noise for procedural textures
     metadata.py     # JSON export
     atlas.py        # Texture atlas packing
     quality.py      # Mobile/desktop quality profiles
     scaling.py      # Nearest-neighbor scaling
   sprites/
-    player.py       # 7 player animations x 4 directions
+    player.py       # 7 player animations x 4 directions (visible sword attack)
     enemies.py      # 5 enemy types with variants
     npcs.py         # Villager, merchant
     terrain.py      # 9 tiles + 32 autotiles
@@ -298,35 +289,28 @@ pixel-asset-gen/
 
 All sprites are generated programmatically using:
 
+- **Cel-shading** — 3-4 muted color tones with hard transitions (Kingdom Rush style)
 - **Sine waves** — oscillating motion (wobble, sway, waves, breathing)
 - **Fractal noise** — organic textures (stone, clouds, canopy detail)
 - **Physics simulation** — gravity, parabolic trajectories (crumbling, falling leaves)
-- **HSL color math** — 3-tier shading (highlight/base/shadow) from single base colors
+- **HSL color math** — bold 3-tier shading (highlight +25% / base / shadow -30%)
 - **Hue rotation** — color variants without redrawing
+- **Texture patterns** — brick, plank, stone, grass spikes, thatch cross-hatch
 
 No neural networks, no training data, no external assets. Every pixel is placed by math.
 
-## Extending
+## Godot 4.6 Sample Project
 
-Add new assets by creating generator functions:
+A fully working Godot 4.6 demo is included that showcases all generated assets:
 
-```python
-from engine.drawing import new_sprite, put_pixel, draw_outline
-from engine.palette import OBJECTS
-from engine.sprite import SpriteSheet
-
-def generate_campfire() -> SpriteSheet:
-    frames = []
-    for f in range(8):
-        img = new_sprite()  # 16x16 transparent RGBA
-        # Draw your pixels...
-        put_pixel(img, 7, 10, OBJECTS.base("fire_inner"))
-        draw_outline(img)
-        frames.append(img)
-    return SpriteSheet("campfire", frames, frame_duration_ms=100, loop=True)
-```
-
-Add it to the module's `generate_all()` list and it auto-integrates with the full pipeline (PNG, JSON, atlas, GIF, scaling, hue-shift, filtering).
+- **50x40 tile world** with village, castle courtyard, adventure zones
+- **Player character** with 7 animation states, weapon switching (Q/E), visible held weapon
+- **10 enemies** (slime, skeleton, bat, ghost, goblin) with wandering AI
+- **NPCs** — villagers and merchant
+- **21 buildings** at proper scale (4x normal, 6x landmarks)
+- **Weapon racks** with all 29 weapons displayed
+- **Effects** — fire, lightning, portals, heal aura, frost
+- **1280x720 landscape** viewport at 1.5x camera zoom
 
 ## Engine Compatibility
 

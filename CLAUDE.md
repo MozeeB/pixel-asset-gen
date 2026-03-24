@@ -1,14 +1,24 @@
 # Asset Generator
 
-Pixel art game asset generator. Python + Pillow. No external dependencies beyond Pillow.
+Procedural pixel art game asset generator in **Kingdom Rush cel-shaded style**.
+Python + Pillow. No external dependencies beyond Pillow.
+
+## Art Style: Kingdom Rush
+
+- **Cel-shaded**: 3-4 muted color tones per surface, hard transitions (no gradients)
+- **No pure black**: Darkest color is warm dark brown `KR_OUTLINE = (50, 35, 25)`
+- **Thick outlines**: 2px via `draw_outline_thick()`, warm brown
+- **Muted palette**: All colors grey-shifted with warm undertones
+- **Bold shading**: Highlight +25% / Shadow -30% (stronger than standard pixel art)
+- **Texture patterns**: Brick mortar, wood planks, stone cracks, grass spikes, thatch
 
 ## Project Structure
 
 ```
 engine/           Core rendering engine
-  drawing.py      Pixel primitives, outlines, shading, composition
+  drawing.py      Pixel primitives, thick outlines, shading, texture patterns
   sprite.py       SpriteSheet, DirectionalSprite, StaticSprite dataclasses
-  palette.py      Color system with 3-tier shading (highlight/base/shadow)
+  palette.py      KR-style color system: muted warm palettes, 3-tier shading
   noise.py        Value noise + fractal noise (deterministic, seeded)
   metadata.py     JSON metadata export
   atlas.py        Texture atlas packing
@@ -16,7 +26,7 @@ engine/           Core rendering engine
   scaling.py      Nearest-neighbor scaling
 
 sprites/          Asset generators (each has generate_all() -> list)
-  player.py       Player animations (7 states x 4 directions)
+  player.py       Player animations (7 states x 4 directions, visible sword attack)
   enemies.py      5 enemy types with idle/hit/death
   npcs.py         Villager, merchant
   terrain.py      9 tiles + 32 autotile variants
@@ -147,8 +157,11 @@ Total: 186 assets (96 animated, 90 static)
 
 ## Architecture Patterns
 
+- **Kingdom Rush cel-shading**: 3-4 muted tones, thick warm outlines, no pure black
 - **Immutable sprites**: All drawing functions return new images, never mutate
-- **3-tier shading**: Every color has highlight/base/shadow via HSL adjustment
+- **Bold 3-tier shading**: highlight +25% / base / shadow -30% via HSL
+- **Texture patterns**: `draw_brick_pattern()`, `draw_plank_pattern()`, `draw_stone_texture()`, `draw_grass_spikes()`, `draw_thatch_pattern()`
+- **Thick outlines**: `draw_outline_thick(img)` for 2px warm brown outlines
 - **Deterministic noise**: Seeded value noise for reproducible procedural textures
 - **generate_all() convention**: Each sprites/*.py exports generate_all() returning list
 - **Palette separation**: Colors defined in engine/palette.py, referenced by key name
@@ -158,7 +171,7 @@ Total: 186 assets (96 animated, 90 static)
 
 1. Add generator function in appropriate `sprites/*.py` module
 2. Use `new_sprite()` for 16x16 transparent canvas
-3. Draw with `put_pixel()`, `draw_outline()`, `draw_circle()`, etc.
+3. Draw with `put_pixel()`, `draw_outline_thick()`, `draw_circle()`, etc.
 4. Return `SpriteSheet(name, frames, frame_duration_ms, loop)` for animations
 5. Return `StaticSprite(name, image, category)` for static sprites
 6. Add to that module's `generate_all()` list
@@ -186,6 +199,7 @@ Each sprite produces:
 - Functions < 50 lines, files < 800 lines
 - Pixel coordinates are (x, y) with origin top-left
 - All colors are RGB tuples `(r, g, b)` or RGBA `(r, g, b, a)`
+- No pure black — use `KR_OUTLINE` (50, 35, 25) for darkest color
 - Seeds are explicit integers for deterministic output
 - Use `math.sin`/`math.cos` for procedural animation curves
 - Use `noise_map()` / `fractal_noise()` for organic textures
@@ -197,3 +211,9 @@ Godot MCP server configured for Godot 4.6. Assets are designed for Godot import:
 - Texture atlas with coordinate mappings
 - 16x16 base size (standard tile size)
 - Nearest-neighbor scaling preserves pixel art crispness
+- Sample Godot project at `../godot-game/game-test-assets/`
+  - 50x40 tile world with village, castle, adventure zones
+  - Player with weapon switching (Q/E), visible held weapon
+  - 10 enemies with wandering AI + idle/hit/death animations
+  - NPCs, items, effects, buildings all placed and working
+  - 1280x720 landscape viewport, 1.5x camera zoom
