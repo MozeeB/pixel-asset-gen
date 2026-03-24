@@ -2,7 +2,7 @@
 
 Procedural pixel art game asset generator. Produces complete, game-ready sprite sheets with animations, JSON metadata, texture atlases, and animated GIF previews — all from a single CLI command.
 
-**165 assets** (83 animated, 82 static) generated procedurally using sine waves, fractal noise, and physics simulation. Zero hand-drawn art required.
+**186 assets** (96 animated, 90 static) across 10 categories — generated procedurally using sine waves, fractal noise, and physics simulation. Zero hand-drawn art required.
 
 ## Preview
 
@@ -63,6 +63,19 @@ Procedural pixel art game asset generator. Produces complete, game-ready sprite 
   <img src="preview/staff_charge.gif" alt="Staff Charge" width="64">
 </p>
 
+### Buildings & Structures
+
+<p>
+  <img src="preview/house_idle.gif" alt="House" width="64">
+  <img src="preview/castle_idle.gif" alt="Castle" width="64">
+  <img src="preview/windmill_spin.gif" alt="Windmill" width="64">
+  <img src="preview/blacksmith_idle.gif" alt="Blacksmith" width="64">
+  <img src="preview/fountain_splash.gif" alt="Fountain" width="64">
+  <img src="preview/lighthouse_idle.gif" alt="Lighthouse" width="64">
+  <img src="preview/dungeon_entrance_idle.gif" alt="Dungeon" width="64">
+  <img src="preview/crystal_cave_idle.gif" alt="Crystal Cave" width="64">
+</p>
+
 ### Items & Terrain
 
 <p>
@@ -80,7 +93,7 @@ Procedural pixel art game asset generator. Produces complete, game-ready sprite 
 
 ## Features
 
-- **165 procedural assets** — characters, enemies, NPCs, terrain, items, UI, effects, natural objects, weapons & shields
+- **186 procedural assets** — characters, enemies, NPCs, terrain, items, UI, effects, natural objects, weapons & shields, buildings & structures
 - **Animated sprite sheets** — variable frame timing, looping/one-shot, 4-directional movement
 - **Multi-scale export** — 1x, 2x, 4x (or any custom scales like 3x, 8x)
 - **JSON metadata** — frame counts, timing, hitboxes, anchors, recommended FPS
@@ -95,7 +108,7 @@ Procedural pixel art game asset generator. Produces complete, game-ready sprite 
 ## Installation
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/pixel-asset-gen.git
+git clone https://github.com/MozeeB/pixel-asset-gen.git
 cd pixel-asset-gen
 pip install Pillow
 ```
@@ -212,6 +225,7 @@ python generate_assets.py --profile mobile --validate-only
 | Effects | `effects` | 24 | explosions, magic, particles, combos |
 | Objects | `objects` | 12 | rock, sky, leaf, tree, water, grass |
 | Weapons | `weapons` | 29 | melee, ranged, magic, shields, enchanted, rarity |
+| Buildings | `buildings` | 21 | houses, castle, shops, church, windmill, ruins, more |
 
 ## Output Format
 
@@ -275,6 +289,7 @@ pixel-asset-gen/
     effects.py      # 24 visual effects
     objects.py      # 12 natural object animations
     weapons.py      # 29 weapons, shields, enchanted, rarity
+    buildings.py    # 21 buildings & structures with animations
   generate_assets.py  # CLI entry point
   GUIDE.md            # Detailed usage guide
 ```

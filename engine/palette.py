@@ -251,3 +251,42 @@ EFFECTS = _build_palette("effects", {
     "hit_orange": (255, 180, 50),
     "hit_yellow": (255, 240, 100),
 })
+
+BUILDINGS = _build_palette("buildings", {
+    # Walls & structure
+    "stone_wall": (160, 155, 145),
+    "stone_dark": (110, 105, 100),
+    "brick": (175, 95, 60),
+    "brick_dark": (140, 70, 45),
+    "wood_wall": (150, 105, 55),
+    "wood_dark": (105, 70, 38),
+    "plaster": (220, 210, 190),
+    "plaster_crack": (185, 175, 160),
+    # Roofs
+    "roof_red": (170, 55, 40),
+    "roof_blue": (55, 80, 140),
+    "roof_thatch": (190, 165, 90),
+    "roof_slate": (90, 95, 100),
+    # Doors & windows
+    "door_wood": (120, 75, 35),
+    "door_dark": (80, 50, 25),
+    "window_glass": (140, 190, 230),
+    "window_glow": (255, 230, 140),
+    "window_frame": (90, 70, 50),
+    # Details
+    "chimney": (130, 120, 115),
+    "chimney_smoke": (170, 170, 180),
+    "lantern": (255, 210, 80),
+    "sign_wood": (140, 100, 50),
+    "flag": (200, 50, 40),
+    "banner": (60, 50, 140),
+    # Special buildings
+    "crystal_wall": (130, 170, 220),
+    "crystal_glow": (180, 210, 255),
+    "dark_stone": (50, 45, 55),
+    "lava_glow": (255, 100, 30),
+    "ice_wall": (180, 220, 245),
+    "ice_shine": (220, 240, 255),
+    "gold_trim": (220, 180, 40),
+    "iron_bar": (100, 100, 110),
+})
