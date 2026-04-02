@@ -1,0 +1,44 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/player.gd" id="1_player"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
+size = Vector2(10, 14)
+
+[node name="Player" type="CharacterBody2D"]
+script = ExtResource("1_player")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -8)
+texture_filter = 1
+scale = Vector2(2, 2)
+
+[node name="WeaponSprite" type="AnimatedSprite2D" parent="."]
+position = Vector2(14, -8)
+texture_filter = 1
+scale = Vector2(2, 2)
+z_index = 1
+
+[node name="HeldWeapon" type="Sprite2D" parent="."]
+position = Vector2(14, -4)
+texture_filter = 1
+scale = Vector2(2, 2)
+rotation = -0.523599
+z_index = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -7)
+shape = SubResource("RectangleShape2D_1")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(1.5, 1.5)
+position_smoothing_enabled = true
+position_smoothing_speed = 8.0
+
+[node name="WeaponLabel" type="Label" parent="."]
+offset_left = -40
+offset_top = 10
+offset_right = 40
+offset_bottom = 26
+horizontal_alignment = 1
+text = "Sword"

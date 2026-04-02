@@ -1,0 +1,88 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/world.gd" id="1_world"]
+[ext_resource type="PackedScene" path="res://scenes/player.tscn" id="2_player"]
+[ext_resource type="PackedScene" path="res://scenes/enemy.tscn" id="3_enemy"]
+[ext_resource type="PackedScene" path="res://scenes/hud.tscn" id="4_hud"]
+
+[node name="World" type="Node2D"]
+script = ExtResource("1_world")
+
+[node name="Background" type="Node2D" parent="."]
+z_index = -10
+
+[node name="Terrain" type="Node2D" parent="."]
+z_index = -1
+
+[node name="Objects" type="Node2D" parent="."]
+z_index = 0
+
+[node name="Items" type="Node2D" parent="."]
+z_index = 0
+
+[node name="NPCs" type="Node2D" parent="."]
+z_index = 0
+
+[node name="Effects" type="Node2D" parent="."]
+z_index = 1
+
+[node name="Weapons" type="Node2D" parent="."]
+z_index = 0
+
+[node name="Buildings" type="Node2D" parent="."]
+z_index = 0
+
+[node name="Enemies" type="Node2D" parent="."]
+
+[node name="Slime" parent="Enemies" instance=ExtResource("3_enemy")]
+position = Vector2(64, 280)
+enemy_type = "slime"
+
+[node name="SlimeBlue" parent="Enemies" instance=ExtResource("3_enemy")]
+position = Vector2(120, 300)
+enemy_type = "slime"
+
+[node name="Skeleton" parent="Enemies" instance=ExtResource("3_enemy")]
+position = Vector2(480, 300)
+enemy_type = "skeleton"
+wander_speed = 25.0
+
+[node name="SkeletonGuard" parent="Enemies" instance=ExtResource("3_enemy")]
+position = Vector2(560, 160)
+enemy_type = "skeleton"
+wander_speed = 15.0
+wander_range = 30.0
+
+[node name="Bat" parent="Enemies" instance=ExtResource("3_enemy")]
+position = Vector2(240, 48)
+enemy_type = "bat"
+wander_speed = 50.0
+
+[node name="Bat2" parent="Enemies" instance=ExtResource("3_enemy")]
+position = Vector2(680, 200)
+enemy_type = "bat"
+wander_speed = 45.0
+
+[node name="Ghost" parent="Enemies" instance=ExtResource("3_enemy")]
+position = Vector2(640, 420)
+enemy_type = "ghost"
+wander_speed = 20.0
+
+[node name="Ghost2" parent="Enemies" instance=ExtResource("3_enemy")]
+position = Vector2(570, 290)
+enemy_type = "ghost"
+wander_speed = 15.0
+
+[node name="Goblin" parent="Enemies" instance=ExtResource("3_enemy")]
+position = Vector2(96, 500)
+enemy_type = "goblin"
+
+[node name="Goblin2" parent="Enemies" instance=ExtResource("3_enemy")]
+position = Vector2(360, 450)
+enemy_type = "goblin"
+wander_speed = 35.0
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
+position = Vector2(160, 340)
+
+[node name="HUD" parent="." instance=ExtResource("4_hud")]

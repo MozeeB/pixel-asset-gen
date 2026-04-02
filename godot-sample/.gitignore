@@ -1,0 +1,7 @@
+# Godot 4 generated files
+.godot/
+*.import
+!icon.svg.import
+
+# Generated assets (run `python generate_assets.py` then copy here)
+assets/
